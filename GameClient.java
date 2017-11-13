@@ -1,17 +1,17 @@
 /**
  * Collaborators:
- * Isabella Cedric
- * 	ID: 1879812
- * 	cedri100@mail.chapman.edu /**
+ * Maika Fujii
+ * 	ID: 1935412
+ * 	fujii108@mail.chapman.edu /**
  * Thomas Madden
  * 	ID: 2261821
  * 	madde120@mail.chapman.edu /**
- * Andre Perkins
- * 	ID: 2267349
- * 	perki128@mail.chapman.edu /**
+ * Dillon Tidgewell
+ * 	ID: 
+ * 	tidge@mail.chapman.edu /**
  *
  * Course: CPSC 353-01
- * Assignment: PA04 - Network Game
+ * Assignment: Final Project - Tic-Tac-Toe
  *
  *
  * GameClient.java
