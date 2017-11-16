@@ -1,22 +1,21 @@
 
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-public GameServer {
+public class GameServer {
   private ArrayList<Socket> socketList;
 	private ArrayList<Player> playerList;
 	private ServerSocket serverSock = null;
-	private int numberOfPlayers = 2;
 	private int numberConnected = 0;
   private int state = 0;
-
-  private Game game = null;
 
   public GameServer() {
     socketList = new ArrayList<Socket>();
     playerList = new ArrayList<Player>();
-    game = new Game(playerList);
   }
 
-  private void getConnection()
+  private void getConnections(int numberOfPlayers)
   {
     // Wait for a connection from the client
     try
@@ -28,16 +27,17 @@ public GameServer {
       {
         Socket connectionSock = serverSock.accept();
         // Add this socket to the list
-        Player newplayer= new Player(connectionSock, "");   // we should find a name for player in gameclient
+        Player newPlayer= new Player(connectionSock, "");   // we should find a name for player in gameclient
         //socketList.add(connectionSock);
-        playerList.add(newplayer);
+        playerList.add(newPlayer);
         numberConnected++;
-        System.out.print("The number of connected players is ");
-        System.out.println(numberConnected);
-        // Send to ClientHandler the socket and arraylist of all sockets
-        ClientHandler handler = new ClientHandler(newplayer, this.playerList,mygame);
-        Thread theThread = new Thread(handler);
-        theThread.start();
+        System.out.println("The number of connected players is " + numberConnected);
+        for (int i = 0; i < playerList.size(); ++i) {
+          if (playerList.get(i).getName() != "") {
+            System.out.println("Player " + (i+1) + ": " + playerList.get(i).getName());
+          }
+        }
+
       }//  while (numberConnected < numberOfPlayers)
 
       System.out.println("All players have connected\n");
@@ -48,14 +48,18 @@ public GameServer {
         ready = 1;								//Wait for players to enter their names
         for (Player p:playerList)
         {
-          if (p.name.equals(""))
+          if (p.getName().equals(""))
           {
             ready = 0;
           }
         }//for (Player p:playerList)
       }//while (ready == 0)
 
-      showScores();
+
+      // Ready for Tic Tac Toe Matchups
+
+      // Send each player their opponent's info
+
     }//try
     catch (IOException e)
     {
@@ -65,9 +69,18 @@ public GameServer {
 
   public static void main(String[] args) {
     GameServer server = new GameServer();
-    server.getConnection();
+    System.out.println("Please enter how many players are in your tournament!");
+    int numPlayers = 0;
+    try {
+      while (numPlayers <= 0) {
+        String numPlayersStr = new BufferedReader(new InputStreamReader(System.in)).readLine();
+        numPlayers = Integer.parseInt(numPlayersStr);
+      }
+    } catch (IOException ioe) {
+      System.out.println("IOE Exception while reading numPlayers: " + ioe.getMessage());
+    }
+    server.getConnections(numPlayers);
     server.state = 1;
   }
-
 
 }

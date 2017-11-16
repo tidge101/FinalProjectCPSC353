@@ -7,7 +7,7 @@
  * 	ID: 2261821
  * 	madde120@mail.chapman.edu /**
  * Dillon Tidgewell
- * 	ID: 
+ * 	ID:
  * 	tidge@mail.chapman.edu /**
  *
  * Course: CPSC 353-01
@@ -50,7 +50,7 @@ public class GameClient
 	private static final int port = 7654;
 	private static Socket connectionSock;
 	private static DataOutputStream serverOutput;
-	private static ClientListener listener;
+	private static BufferedReader inFromServer;
 	private static Thread theThread;
 
 	//init private variables
@@ -62,38 +62,26 @@ public class GameClient
 			connectionSock = new Socket(hostname, port);
 
 			serverOutput = new DataOutputStream(connectionSock.getOutputStream());
+			inFromServer =  new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
 
-			// Start a thread to listen and display data sent by the server
-			listener = new ClientListener(connectionSock);
-			theThread = new Thread(listener);
-			theThread.start();
 
 			//Prompt for the user's nme and send it to the server
 			Scanner keyboard = new Scanner(System.in);
 			while(true){
-			String name = keyboard.nextLine();
-
-			if(name.toString() != null){
-			serverOutput.writeBytes(name + "\n");
-			break;
-			}
-
-		}
-			// Read input from the keyboard and send it to teh Game Server.
-
-			while (true)
-			{
-				System.out.println("Loading......");
-
-				String message = keyboard.nextLine();
-
-				if(message == " "){
-				System.out.println("Still Loading....");
-
+				System.out.println("Please enter a valid name!");
+				String name = keyboard.nextLine();
+				if(name.toString() != null){
+					serverOutput.writeBytes(name + "\n");
+					break;
 				}
-				serverOutput.writeBytes(message + "\n");
 
 			}
+			// Read input from server of who they're playing
+			String playerInfo = inFromServer.readLine();
+
+			// Connect to other player using playerInfo
+
+			// Start up TicTacToe client here
 		}
 		catch (IOException e)
 		{

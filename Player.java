@@ -1,4 +1,4 @@
-
+import java.net.*;
 
 public class Player {
   private int gamesWon;
@@ -6,7 +6,7 @@ public class Player {
   private Socket connectionSock = null;
 
   public Player() {
-    id = 0;
+    this.name = "";
   }
 
   public Player(Socket connectionSock, String name) {
@@ -15,7 +15,7 @@ public class Player {
     gamesWon = 0;
   }
 
-  public int getName() {
+  public String getName() {
     return name;
   }
 
@@ -29,5 +29,12 @@ public class Player {
 
   public void addGameWon() {
     gamesWon++;
+  }
+
+  public String toString() {
+    String player = "Name: " + name + "\n";
+    player += "Connection Socket: " + connectionSock.toString() + "\n";
+    player += "Games Won: " + gamesWon;
+    return player;
   }
 }
