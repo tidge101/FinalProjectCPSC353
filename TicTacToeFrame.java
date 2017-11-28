@@ -1,4 +1,21 @@
-
+/**
+ * Collaborators:
+ * Maika Fujii
+ *  ID: 1935412
+ *  fujii108@mail.chapman.edu /**
+ * Thomas Madden
+ *  ID: 2261821
+ *  madde120@mail.chapman.edu /**
+ * Dillon Tidgewell
+ *  ID:
+ *  tidge@mail.chapman.edu /**
+ *
+ * Course: CPSC 353-01
+ * Assignment: Final Project - Tic-Tac-Toe
+ *
+ *
+ * TicTacToeFrame.java
+ */
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
