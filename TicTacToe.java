@@ -52,6 +52,7 @@ public class TicTacToe
 		JPanel panel = new JPanel();
 		frame.add(panel);
 		JButton button = new JButton("Play");
+    button.addActionListener(new playAction());
 		panel.add(button);
 
 		JMenuBar menubar = new JMenuBar();
@@ -61,23 +62,19 @@ public class TicTacToe
 		JMenuItem about = new JMenuItem("About");
 		help.add(about);
 
-		class playAction implements ActionListener{
-			public void actionPerformed (ActionEvent e){
-				JFrame ticTacToe = new TicTacToeFrame();
-		        ticTacToe.setTitle("Lets Play");
-		        ticTacToe.setSize(600, 600);
-		        ticTacToe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		        ticTacToe.setLocationRelativeTo(null);
-		        ticTacToe.setVisible(true);
-			}
-		}
-
-
-
-
-
-
-
 
     }
 } // end class TicTacToe
+
+class playAction implements ActionListener{
+  public playAction() {}
+
+  public void actionPerformed (ActionEvent e){
+    JFrame ticTacToe = new TicTacToeFrame();
+        ticTacToe.setTitle("Lets Play");
+        ticTacToe.setSize(600, 600);
+        ticTacToe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ticTacToe.setLocationRelativeTo(null);
+        ticTacToe.setVisible(true);
+  }
+}
