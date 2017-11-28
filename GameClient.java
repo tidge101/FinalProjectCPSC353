@@ -67,22 +67,24 @@ public class GameClient
 
 			//Prompt for the user's nme and send it to the server
 			Scanner keyboard = new Scanner(System.in);
+			String name;
 			while(true){
 				System.out.println("Please enter a valid name!");
-				String name = keyboard.nextLine();
+				name = keyboard.nextLine();
 				if(name.toString() != null){
-		//S			serverOutput.writeBytes(name + "\n");
+		//			serverOutput.writeBytes(name + "\n");
 					break;
 				}
 
 			}
 			// Read input from server of who they're playing
 			String playerInfo = inFromServer.readLine();
+			System.out.println(playerInfo.substring(10));
 
 			// Connect to other player using playerInfo
 
 			// Start up TicTacToe client here
-			TicTacToe currentGame = new TicTacToe();
+			TicTacToe currentGame = new TicTacToe(name);
 			currentGame.initialize();
 		}
 		catch (IOException e)

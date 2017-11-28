@@ -11,17 +11,24 @@ import java.awt.event.ActionListener;
 public class TicTacToe
 {
     private char[][] board;
+    private String name;
 
     public TicTacToe()
     {
       board = new char[3][3];
     }
 
+    public TicTacToe(String name)
+    {
+      board = new char[3][3];
+      this.name = name;
+    }
+
     public void initialize()
     {
     	JFrame frame = new JFrame("Menu");
 		frame.setVisible(true);
-		frame.setTitle("Tic-Tac-Toe TCP Game!");
+		frame.setTitle("Tic-Tac-Toe TCP Game: " + name);
 		frame.setSize(600,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

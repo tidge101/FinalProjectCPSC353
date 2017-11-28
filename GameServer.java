@@ -73,10 +73,10 @@ public class GameServer {
         int i = (int)(Math.random() * notMatchedUp.size());
         int j = (int)(Math.random() * notMatchedUp.size());
         if (i != j) {
-          PrintWriter iOut = new PrintWriter(notMatchedUp.get(i).getConnectionSock().getOutputStream());
-          PrintWriter jOut = new PrintWriter(notMatchedUp.get(j).getConnectionSock().getOutputStream());
-          iOut.println("Opponent: " + notMatchedUp.get(i).getConnectionSock());
-          jOut.println("Opponent: " + notMatchedUp.get(j).getConnectionSock());
+          DataOutputStream iOut = new DataOutputStream(notMatchedUp.get(i).getConnectionSock().getOutputStream());
+          DataOutputStream jOut = new DataOutputStream(notMatchedUp.get(j).getConnectionSock().getOutputStream());
+          iOut.writeBytes("Opponent: " + notMatchedUp.get(i).getConnectionSock());
+          jOut.writeBytes("Opponent: " + notMatchedUp.get(j).getConnectionSock());
           notMatchedUp.remove(i);
           if (j > i) {
             notMatchedUp.remove(j - 1);
