@@ -71,7 +71,7 @@ public class GameClient
 				System.out.println("Please enter a valid name!");
 				String name = keyboard.nextLine();
 				if(name.toString() != null){
-					serverOutput.writeBytes(name + "\n");
+		//S			serverOutput.writeBytes(name + "\n");
 					break;
 				}
 
@@ -82,6 +82,8 @@ public class GameClient
 			// Connect to other player using playerInfo
 
 			// Start up TicTacToe client here
+			TicTacToe currentGame = new TicTacToe();
+			currentGame.initialize();
 		}
 		catch (IOException e)
 		{

@@ -8,17 +8,23 @@ import java.awt.event.ActionListener;
 /**
  * This is a simple little TicTacToe game.
  */
-public class TicTacToe 
+public class TicTacToe
 {
-    public static void main(String[] args) 
+    private char[][] board;
+
+    public TicTacToe()
     {
-        
+      board = new char[3][3];
+    }
+
+    public void initialize()
+    {
     	JFrame frame = new JFrame("Menu");
 		frame.setVisible(true);
 		frame.setTitle("Tic-Tac-Toe TCP Game!");
 		frame.setSize(600,600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		JPanel panel = new JPanel();
 		frame.add(panel);
 		JButton button = new JButton("Play");
@@ -44,10 +50,10 @@ public class TicTacToe
 
 
 
-		
 
 
 
-        
+
+
     }
 } // end class TicTacToe

@@ -30,6 +30,7 @@ public class GameServer {
         Player newPlayer= new Player(connectionSock, "");   // we should find a name for player in gameclient
         //socketList.add(connectionSock);
         playerList.add(newPlayer);
+        socketList.add(connectionSock);
         numberConnected++;
         System.out.println("The number of connected players is " + numberConnected);
         for (int i = 0; i < playerList.size(); ++i) {
@@ -42,6 +43,7 @@ public class GameServer {
 
       System.out.println("All players have connected\n");
       //Wait until all clients have given us their names.
+      /*
       int ready = 0;
       while (ready == 0)
       {
@@ -53,10 +55,37 @@ public class GameServer {
             ready = 0;
           }
         }//for (Player p:playerList)
-      }//while (ready == 0)
+      }//while (ready == 0) */
+
+      System.out.println("Ready!");
 
 
       // Ready for Tic Tac Toe Matchups
+      ArrayList<Player> notMatchedUp = new ArrayList<Player>();
+      for (int i = 0; i < playerList.size(); ++i) {
+        notMatchedUp.add(playerList.get(i));
+      }
+
+      while (notMatchedUp.size() != 0) {
+        if (notMatchedUp.size() == 1) {
+
+        }
+        int i = (int)(Math.random() * notMatchedUp.size());
+        int j = (int)(Math.random() * notMatchedUp.size());
+        if (i != j) {
+          PrintWriter iOut = new PrintWriter(notMatchedUp.get(i).getConnectionSock().getOutputStream());
+          PrintWriter jOut = new PrintWriter(notMatchedUp.get(j).getConnectionSock().getOutputStream());
+          iOut.println("Opponent: " + notMatchedUp.get(i).getConnectionSock());
+          jOut.println("Opponent: " + notMatchedUp.get(j).getConnectionSock());
+          notMatchedUp.remove(i);
+          if (j > i) {
+            notMatchedUp.remove(j - 1);
+          } else {
+            notMatchedUp.remove(j);
+          }
+        }
+      }
+
 
       // Send each player their opponent's info
 
