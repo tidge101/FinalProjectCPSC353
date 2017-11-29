@@ -35,12 +35,9 @@
  *
  *
  */
-import java.net.Socket;
-import java.io.DataOutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.Scanner;
+ import java.io.*;
+ import java.net.*;
+ import java.util.*;
 
 public class GameClient
 {
@@ -52,6 +49,7 @@ public class GameClient
 	private static DataOutputStream serverOutput;
 	private static BufferedReader inFromServer;
 	private static Thread theThread;
+	private static ServerSocket hostSocket;
 
 	//init private variables
 	public static void main(String[] args)
@@ -79,12 +77,28 @@ public class GameClient
 			}
 			// Read input from server of who they're playing
 			String playerInfo = inFromServer.readLine();
-			System.out.println(playerInfo.substring(10));
+			if (playerInfo.indexOf("Host") >= 0) {
+				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(",") - 1);
+				System.out.println(opponentIp);
+				int hostPort = Integer.parseInt(inFromServer.readLine().substring(6));
+				hostSocket = new ServerSocket(hostPort);
+				Socket connectionSock = hostSocket.accept();
+			} else {
+				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(",") - 1);
+				System.out.println(opponentIp);
+				int hostPort = Integer.parseInt(inFromServer.readLine().substring(6));
+				connectionSock = new Socket(opponentIp, hostPort);
+			}
 
 			// Connect to other player using playerInfo
 
 			// Start up TicTacToe client here
-			TicTacToe currentGame = new TicTacToe(name);
+			TicTacToe currentGame;
+			if (hostSocket == null) {
+				currentGame = new TicTacToe(name, false);
+			} else {
+				currentGame = new TicTacToe(name, true);
+			}
 			currentGame.initialize();
 		}
 		catch (IOException e)

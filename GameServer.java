@@ -90,10 +90,13 @@ public class GameServer {
         int i = (int)(Math.random() * notMatchedUp.size());
         int j = (int)(Math.random() * notMatchedUp.size());
         if (i != j) {
+          int portToUse = (int)(Math.random() * 100) + 1000;
           DataOutputStream iOut = new DataOutputStream(notMatchedUp.get(i).getConnectionSock().getOutputStream());
           DataOutputStream jOut = new DataOutputStream(notMatchedUp.get(j).getConnectionSock().getOutputStream());
-          iOut.writeBytes("Opponent: " + notMatchedUp.get(i).getConnectionSock());
-          jOut.writeBytes("Opponent: " + notMatchedUp.get(j).getConnectionSock());
+          iOut.writeBytes("Host: " + notMatchedUp.get(j).getConnectionSock() + "\n");
+          jOut.writeBytes("Client: " + notMatchedUp.get(i).getConnectionSock() + "\n");
+          iOut.writeBytes("Port: " + portToUse + "\n");
+          jOut.writeBytes("Port: " + portToUse + "\n");
           notMatchedUp.remove(i);
           if (j > i) {
             notMatchedUp.remove(j - 1);

@@ -27,18 +27,27 @@ import java.awt.event.ActionListener;
  */
 public class TicTacToe
 {
-    private char[][] board;
     private String name;
+    private boolean myTurn;
 
     public TicTacToe()
     {
-      board = new char[3][3];
+      this.name = "";
+      myTurn = true;
     }
 
-    public TicTacToe(String name)
+    public TicTacToe(String name, boolean initTurn)
     {
-      board = new char[3][3];
       this.name = name;
+      this.myTurn = initTurn;
+    }
+
+    public void setMyTurn(boolean myTurn) {
+      this.myTurn = myTurn;
+    }
+
+    public boolean getMyTurn() {
+      return myTurn;
     }
 
     public void initialize()
