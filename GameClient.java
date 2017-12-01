@@ -78,13 +78,13 @@ public class GameClient
 			// Read input from server of who they're playing
 			String playerInfo = inFromServer.readLine();
 			if (playerInfo.indexOf("Host") >= 0) {
-				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(",") - 1);
+				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
 				System.out.println(opponentIp);
 				int hostPort = Integer.parseInt(inFromServer.readLine().substring(6));
 				hostSocket = new ServerSocket(hostPort);
 				Socket connectionSock = hostSocket.accept();
 			} else {
-				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(",") - 1);
+				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
 				System.out.println(opponentIp);
 				int hostPort = Integer.parseInt(inFromServer.readLine().substring(6));
 				connectionSock = new Socket(opponentIp, hostPort);
@@ -92,6 +92,7 @@ public class GameClient
 
 			// Connect to other player using playerInfo
 
+      System.out.println("got here");
 			// Start up TicTacToe client here
 			TicTacToe currentGame;
 			if (hostSocket == null) {
