@@ -7,8 +7,8 @@
  *  ID: 2261821
  *  madde120@mail.chapman.edu /**
  * Dillon Tidgewell
- *  ID:
- *  tidge@mail.chapman.edu /**
+ *  ID: 002285452
+ *  tidge101@mail.chapman.edu /**
  *
  * Course: CPSC 353-01
  * Assignment: Final Project - Tic-Tac-Toe
@@ -30,6 +30,7 @@ public class TicTacToe
     private String name;
     private boolean myTurn;
 
+    // Constructors
     public TicTacToe()
     {
       this.name = "";
@@ -50,6 +51,7 @@ public class TicTacToe
       return myTurn;
     }
 
+    // Initializer - set GUI parameters for main menu
     public void initialize()
     {
     	JFrame frame = new JFrame("Menu");
@@ -75,6 +77,7 @@ public class TicTacToe
     }
 } // end class TicTacToe
 
+// Create game window
 class playAction implements ActionListener{
   public playAction() {}
 

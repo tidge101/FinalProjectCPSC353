@@ -8,7 +8,7 @@
  *  madde120@mail.chapman.edu /**
  * Dillon Tidgewell
  *  ID:
- *  tidge@mail.chapman.edu /**
+ *  tidge101@mail.chapman.edu /**
  *
  * Course: CPSC 353-01
  * Assignment: Final Project - Tic-Tac-Toe
