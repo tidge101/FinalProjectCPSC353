@@ -50,6 +50,7 @@ public class GameClient
 	private static BufferedReader inFromServer;
 	private static Thread theThread;
 	private static ServerSocket hostSocket;
+  private static Socket opponentSock;
 
 	//init private variables
 	public static void main(String[] args)
@@ -66,41 +67,69 @@ public class GameClient
 			//Prompt for the user's nme and send it to the server
 			Scanner keyboard = new Scanner(System.in);
 			String name;
-			while(true){
-				System.out.println("Please enter a valid name!");
-				name = keyboard.nextLine();
-				if(name.toString() != null){
-		//			serverOutput.writeBytes(name + "\n");
-					break;
-				}
 
-			}
 			// Read input from server of who they're playing
 			String playerInfo = inFromServer.readLine();
+      System.out.println(playerInfo);
 			if (playerInfo.indexOf("Host") >= 0) {
 				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
 				System.out.println(opponentIp);
 				int hostPort = Integer.parseInt(inFromServer.readLine().substring(6));
+        System.out.println(hostPort);
 				hostSocket = new ServerSocket(hostPort);
-				Socket connectionSock = hostSocket.accept();
+				opponentSock = hostSocket.accept();
 			} else {
+        try {
+          Thread.sleep(1000);
+        } catch (Exception e) {
+          System.out.println("problem!");
+        }
 				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
 				System.out.println(opponentIp);
 				int hostPort = Integer.parseInt(inFromServer.readLine().substring(6));
-				connectionSock = new Socket(opponentIp, hostPort);
+        System.out.println(hostPort);
+				opponentSock = new Socket("localhost", hostPort);
 			}
 
-			// Connect to other player using playerInfo
+      while(true){
+        System.out.println("Please enter a valid name!");
+        name = keyboard.nextLine();
+        if(name.toString() != null){
+    //			serverOutput.writeBytes(name + "\n");
+          break;
+        }
 
-      System.out.println("got here");
+      }
+
 			// Start up TicTacToe client here
 			TicTacToe currentGame;
-			if (hostSocket == null) {
-				currentGame = new TicTacToe(name, false);
-			} else {
-				currentGame = new TicTacToe(name, true);
-			}
-			currentGame.initialize();
+
+      try {
+        DataOutputStream out = new DataOutputStream(opponentSock.getOutputStream());
+        BufferedReader in =  new BufferedReader(new InputStreamReader(opponentSock.getInputStream()));
+
+  			if (hostSocket != null) {
+  				currentGame = new TicTacToe(name, true, opponentSock);
+
+          out.writeBytes("Name: " + name);
+          System.out.println("abouttowait host");
+          String opponentName = in.readLine().substring(6);
+  			} else {
+  				currentGame = new TicTacToe(name, false, opponentSock);
+          System.out.println("abouttowait client");
+          try {
+            Thread.sleep(1000);
+          } catch (Exception e) {
+            System.out.println("problem!");
+          }
+
+          String opponentName = in.readLine();
+          out.writeBytes("Name: " + name);
+  			}
+        currentGame.initialize();
+      } catch (IOException ioe) {
+      System.out.println("something went really really wrong");
+      }
 		}
 		catch (IOException e)
 		{

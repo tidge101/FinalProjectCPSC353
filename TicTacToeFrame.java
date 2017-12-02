@@ -20,6 +20,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 /**
  * JFrame to hold TicTacToe board.
@@ -29,6 +32,12 @@ public class TicTacToeFrame extends JFrame
     // Indicate whose turn it is
     private char whoseTurn = 'X';
     private boolean gameOver = false;
+    private boolean myTurn;
+    private Socket connectionSock;
+    private String name;
+    private DataOutputStream out;
+    private BufferedReader in;
+    private String opponentName;
 
     // Create cell grid
     private Cell[][] cells = new Cell[3][3];
@@ -45,13 +54,46 @@ public class TicTacToeFrame extends JFrame
         JPanel panel = new JPanel(new GridLayout(3, 3, 0, 0));
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                panel.add(cells[i][j] = new Cell());
+                panel.add(cells[i][j] = new Cell(i, j));
 
         panel.setBorder(new LineBorder(Color.red, 1));
         jlblStatus.setBorder(new LineBorder(Color.yellow, 1));
 
         add(panel, BorderLayout.CENTER);
         add(jlblStatus, BorderLayout.SOUTH);
+        this.myTurn = true;
+    }
+
+    public TicTacToeFrame(boolean myTurn, Socket connectionSock, String name) {
+      // Panel to hold cells
+      JPanel panel = new JPanel(new GridLayout(3, 3, 0, 0));
+      for (int i = 0; i < 3; i++)
+          for (int j = 0; j < 3; j++)
+              panel.add(cells[i][j] = new Cell(i, j));
+
+      panel.setBorder(new LineBorder(Color.red, 1));
+      jlblStatus.setBorder(new LineBorder(Color.yellow, 1));
+
+      add(panel, BorderLayout.CENTER);
+      add(jlblStatus, BorderLayout.SOUTH);
+      this.myTurn = myTurn;
+      this.connectionSock = connectionSock;
+      this.name = name;
+
+      try {
+        this.out = new DataOutputStream(connectionSock.getOutputStream());
+        this.in =  new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
+
+        if (myTurn) {
+          this.whoseTurn = 'X';
+
+        } else {
+          this.whoseTurn = 'O';
+
+        }
+      } catch (IOException ioe) {
+        System.out.println("something went really wrong");
+      }
     }
 
     /**
@@ -117,13 +159,24 @@ public class TicTacToeFrame extends JFrame
         // token of this cell
         private char token = ' ';
 
+        // location of cell
+        private int row;
+        private int col;
+
         /**
          * Constructor
          */
         public Cell()
         {
             setBorder(new LineBorder(Color.black, 1));
-            addMouseListener(new MyMouseListener());
+            addMouseListener(new MyMouseListener(0, 0));
+        }
+
+        public Cell(int row, int col) {
+          setBorder(new LineBorder(Color.black, 1));
+          addMouseListener(new MyMouseListener(row, col));
+          this.row = row;
+          this.col = col;
         }
 
         /**
@@ -164,33 +217,64 @@ public class TicTacToeFrame extends JFrame
 
         private class MyMouseListener extends MouseAdapter
         {
+            private int row;
+            private int col;
+
+            public MyMouseListener(int row, int col) {
+              this.row = row;
+              this.col = col;
+            }
+
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                if (gameOver)
+                if (gameOver || !myTurn)
                     return;
 
-                // if the cell is empty and the game is not over
-                if (token == ' ' && whoseTurn != ' ')
-                    setToken(whoseTurn);
+                try {
+                  // if the cell is empty and the game is not over
+                  if (token == ' ' && whoseTurn != ' ')
+                      setToken(whoseTurn);
 
-                // Check game status
-                if (isWon(whoseTurn))
-                {
-                    jlblStatus.setText(whoseTurn + " won! Game over!");
+                  // Check game status
+                  if (isWon(whoseTurn))
+                  {
+                      jlblStatus.setText(name + " won! Game over!");
+                      whoseTurn = ' ';
+                      gameOver = true;
+                      out.writeBytes("Win");
+                  }
+                  else if (isFull())
+                  {
+                      jlblStatus.setText("Tie game! Game over!");
+                      whoseTurn = ' ';
+                      gameOver = true;
+                  }
+                  else
+                  {
+                      out.writeBytes("Row: " + row + "\n");
+                      out.writeBytes("Col: " + col + "\n");
+                      jlblStatus.setText(opponentName + "'s turn.");
+                  }
+
+                  String fromOpponent = in.readLine();
+                  if (fromOpponent.indexOf("Win") == -1) {
+                    int row = Integer.parseInt(fromOpponent.substring(5));
+                  } else {
+                    jlblStatus.setText(opponentName + " won! Game over!");
                     whoseTurn = ' ';
                     gameOver = true;
+                  }
+                  fromOpponent = in.readLine();
+                  int col = Integer.parseInt(fromOpponent.substring(5));
+                } catch (IOException ioe) {
+                  System.out.println("something went really wrong");
                 }
-                else if (isFull())
-                {
-                    jlblStatus.setText("Tie game! Game over!");
-                    whoseTurn = ' ';
-                    gameOver = true;
-                }
-                else
-                {
-                    whoseTurn = (whoseTurn == 'X') ? 'O' : 'X';
-                    jlblStatus.setText(whoseTurn + "'s turn.");
+
+                if (whoseTurn == 'X') {
+                  cells[row][col].setToken('O');
+                } else {
+                  cells[row][col].setToken('X');
                 }
             }
         } // end class MyMouseListener

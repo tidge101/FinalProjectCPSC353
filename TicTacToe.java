@@ -21,6 +21,9 @@ import javax.swing.JFrame;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 /**
  * This is a simple little TicTacToe game.
@@ -29,6 +32,7 @@ public class TicTacToe
 {
     private String name;
     private boolean myTurn;
+    private Socket connectionSock;
 
     public TicTacToe()
     {
@@ -36,10 +40,11 @@ public class TicTacToe
       myTurn = true;
     }
 
-    public TicTacToe(String name, boolean initTurn)
+    public TicTacToe(String name, boolean initTurn, Socket opponentSocket)
     {
       this.name = name;
       this.myTurn = initTurn;
+      this.connectionSock = opponentSocket;
     }
 
     public void setMyTurn(boolean myTurn) {
@@ -61,7 +66,7 @@ public class TicTacToe
 		JPanel panel = new JPanel();
 		frame.add(panel);
 		JButton button = new JButton("Play");
-    button.addActionListener(new playAction());
+    button.addActionListener(new playAction(myTurn, connectionSock, name));
 		panel.add(button);
 
 		JMenuBar menubar = new JMenuBar();
@@ -76,10 +81,20 @@ public class TicTacToe
 } // end class TicTacToe
 
 class playAction implements ActionListener{
-  public playAction() {}
+  private boolean myTurn;
+  private Socket connectionSock;
+  private String name;
+
+  public playAction() { this.myTurn = true; }
+
+  public playAction(boolean myTurn, Socket connectionSock, String name) {
+    this.myTurn = myTurn;
+    this.connectionSock = connectionSock;
+    this.name = name;
+  }
 
   public void actionPerformed (ActionEvent e){
-    JFrame ticTacToe = new TicTacToeFrame();
+    JFrame ticTacToe = new TicTacToeFrame(myTurn, connectionSock, name);
         ticTacToe.setTitle("Lets Play");
         ticTacToe.setSize(600, 600);
         ticTacToe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
