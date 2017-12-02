@@ -69,11 +69,8 @@ public class GameClient
 
 			// Read input from server of who they're playing
 			String playerInfo = inFromServer.readLine();
-<<<<<<< HEAD
       System.out.println(playerInfo);
-=======
       // If Client is the Host,
->>>>>>> 3a97a9739635fd5b61f08a54184b8b9ae782fe8f
 			if (playerInfo.indexOf("Host") >= 0) {
 				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
 				System.out.println(opponentIp);

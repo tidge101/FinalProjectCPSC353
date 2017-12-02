@@ -95,13 +95,9 @@ public class GameServer {
         int j = (int)(Math.random() * notMatchedUp.size());
         // Ensure that the same player wasn't selected for both i and j
         if (i != j) {
-<<<<<<< HEAD
           int portToUse = 7655;//(int)(Math.random() * 100) + 10000;
-=======
           // Randomly select port to connect on
-          int portToUse = (int)(Math.random() * 100) + 10000;
           // Create output streams for each client
->>>>>>> 3a97a9739635fd5b61f08a54184b8b9ae782fe8f
           DataOutputStream iOut = new DataOutputStream(notMatchedUp.get(i).getConnectionSock().getOutputStream());
           DataOutputStream jOut = new DataOutputStream(notMatchedUp.get(j).getConnectionSock().getOutputStream());
           // Send each client's socket and port info to each other
