@@ -7,8 +7,8 @@
  *  ID: 2261821
  *  madde120@mail.chapman.edu /**
  * Dillon Tidgewell
- *  ID:
- *  tidge@mail.chapman.edu /**
+ *  ID: 002285452
+ *  tidge101@mail.chapman.edu /**
  *
  * Course: CPSC 353-01
  * Assignment: Final Project - Tic-Tac-Toe
@@ -49,7 +49,9 @@ public class GameServer {
         playerList.add(newPlayer);
         socketList.add(connectionSock);
         numberConnected++;
+        // Output how many players have connected
         System.out.println("The number of connected players is " + numberConnected);
+        // Output info of player who just connected
         for (int i = 0; i < playerList.size(); ++i) {
           if (playerList.get(i).getName() != "") {
             System.out.println("Player " + (i+1) + ": " + playerList.get(i).getName());
@@ -83,20 +85,31 @@ public class GameServer {
         notMatchedUp.add(playerList.get(i));
       }
 
+      // Match waiting players
       while (notMatchedUp.size() != 0) {
-        if (notMatchedUp.size() == 1) {
+        // Cannot match if there is only one player waiting
+        if (notMatchedUp.size() == 1) {}
 
-        }
+        // Randomly select 2 players from notMatchedUp
         int i = (int)(Math.random() * notMatchedUp.size());
         int j = (int)(Math.random() * notMatchedUp.size());
+        // Ensure that the same player wasn't selected for both i and j
         if (i != j) {
+<<<<<<< HEAD
           int portToUse = 7655;//(int)(Math.random() * 100) + 10000;
+=======
+          // Randomly select port to connect on
+          int portToUse = (int)(Math.random() * 100) + 10000;
+          // Create output streams for each client
+>>>>>>> 3a97a9739635fd5b61f08a54184b8b9ae782fe8f
           DataOutputStream iOut = new DataOutputStream(notMatchedUp.get(i).getConnectionSock().getOutputStream());
           DataOutputStream jOut = new DataOutputStream(notMatchedUp.get(j).getConnectionSock().getOutputStream());
+          // Send each client's socket and port info to each other
           iOut.writeBytes("Host: " + notMatchedUp.get(j).getConnectionSock() + "\n");
           jOut.writeBytes("Client: " + notMatchedUp.get(i).getConnectionSock() + "\n");
           iOut.writeBytes("Port: " + portToUse + "\n");
           jOut.writeBytes("Port: " + portToUse + "\n");
+          // Remove i and j from notMatchedUp now that they are matched
           notMatchedUp.remove(i);
           if (j > i) {
             notMatchedUp.remove(j - 1);
@@ -105,19 +118,20 @@ public class GameServer {
           }
         }
       }
-
-
       // Send each player their opponent's info
 
-    }//try
+    } // End try
     catch (IOException e)
     {
       System.out.println(e.getMessage());
-    }//catch
-  }//getConnection
+    } // End catch
+  } // End getConnection
 
   public static void main(String[] args) {
+    // Initialize GameServer
     GameServer server = new GameServer();
+
+    // Get number of players from user input
     System.out.println("Please enter how many players are in your tournament!");
     int numPlayers = 0;
     try {
@@ -128,8 +142,8 @@ public class GameServer {
     } catch (IOException ioe) {
       System.out.println("IOE Exception while reading numPlayers: " + ioe.getMessage());
     }
+    // Wait for n players to connect (where n = numPlayers)
     server.getConnections(numPlayers);
-    server.state = 1;
   }
 
 }

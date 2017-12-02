@@ -7,8 +7,8 @@
  *  ID: 2261821
  *  madde120@mail.chapman.edu /**
  * Dillon Tidgewell
- *  ID:
- *  tidge@mail.chapman.edu /**
+ *  ID: 002285452
+ *  tidge101@mail.chapman.edu /**
  *
  * Course: CPSC 353-01
  * Assignment: Final Project - Tic-Tac-Toe
@@ -23,6 +23,7 @@ public class Player {
   private String name;
   private Socket connectionSock = null;
 
+  // Constructors
   public Player() {
     this.name = "";
   }
@@ -33,6 +34,7 @@ public class Player {
     gamesWon = 0;
   }
 
+  // Accessors/Modifers
   public String getName() {
     return name;
   }
@@ -49,6 +51,7 @@ public class Player {
     gamesWon++;
   }
 
+  // Output Player info
   public String toString() {
     String player = "Name: " + name + "\n";
     player += "Connection Socket: " + connectionSock.toString() + "\n";

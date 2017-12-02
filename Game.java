@@ -7,8 +7,8 @@
  *  ID: 2261821
  *  madde120@mail.chapman.edu /**
  * Dillon Tidgewell
- *  ID:
- *  tidge@mail.chapman.edu /**
+ *  ID: 002285452
+ *  tidge101@mail.chapman.edu /**
  *
  * Course: CPSC 353-01
  * Assignment: Final Project - Tic-Tac-Toe
@@ -24,7 +24,5 @@ public class Game {
 
   public Game(ArrayList<Player> playerList) {
     this.playerList = playerList;
-
-    // GUI here
   }
-}
+} // End class Game

@@ -7,8 +7,8 @@
  * 	ID: 2261821
  * 	madde120@mail.chapman.edu /**
  * Dillon Tidgewell
- * 	ID:
- * 	tidge@mail.chapman.edu /**
+ * 	ID: 002285452
+ * 	tidge101@mail.chapman.edu /**
  *
  * Course: CPSC 353-01
  * Assignment: Final Project - Tic-Tac-Toe
@@ -42,7 +42,6 @@
 public class GameClient
 {
 
-
 	private static final String hostname = "localhost";
 	private static final int port = 7654;
 	private static Socket connectionSock;
@@ -70,7 +69,11 @@ public class GameClient
 
 			// Read input from server of who they're playing
 			String playerInfo = inFromServer.readLine();
+<<<<<<< HEAD
       System.out.println(playerInfo);
+=======
+      // If Client is the Host,
+>>>>>>> 3a97a9739635fd5b61f08a54184b8b9ae782fe8f
 			if (playerInfo.indexOf("Host") >= 0) {
 				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
 				System.out.println(opponentIp);
