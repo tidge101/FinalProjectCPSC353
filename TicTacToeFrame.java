@@ -271,7 +271,11 @@ public class TicTacToeFrame extends JFrame
                   {
                       out.writeBytes("Row: " + row + "\n");
                       out.writeBytes("Col: " + col + "\n");
-                      jlblStatus.setText(whoseTurn + "'s turn.");
+                      if (whoseTurn == 'X') {
+                        jlblStatus.setText("X's turn to play!");
+                      } else {
+                        jlblStatus.setText("O's turn to play!");
+                      }
                   }
 
                   myTurn = false;
@@ -323,8 +327,11 @@ public class TicTacToeFrame extends JFrame
               cells[row][col].setToken(mySign);
 
               myTurn = true;
-              jlblStatus.setText(mySign + "'s turn to play!");
-
+              if (mySign == 'X') {
+                jlblStatus.setText("O's turn to play!");
+              } else {
+                jlblStatus.setText("X's turn to play!");
+              }
 
     					if (fromOpponent.indexOf("Win") != -1){
                 myTurn = false;
