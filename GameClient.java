@@ -111,20 +111,18 @@ public class GameClient
   			if (hostSocket != null) {
   				currentGame = new TicTacToe(name, true, opponentSock);
 
-          out.writeBytes("Name: " + name);
+          out.writeBytes("Name: " + name + "\n");
+          System.out.println("Is connected: " + opponentSock.isConnected());
           System.out.println("abouttowait host");
           String opponentName = in.readLine().substring(6);
+          System.out.println("survived with " + opponentName);
   			} else {
   				currentGame = new TicTacToe(name, false, opponentSock);
+          System.out.println("Is connected: " + opponentSock.isConnected());
           System.out.println("abouttowait client");
-          try {
-            Thread.sleep(1000);
-          } catch (Exception e) {
-            System.out.println("problem!");
-          }
-
           String opponentName = in.readLine();
-          out.writeBytes("Name: " + name);
+          System.out.println("survived with " + opponentName);
+          out.writeBytes("Name: " + name + "\n");
   			}
         currentGame.initialize();
       } catch (IOException ioe) {

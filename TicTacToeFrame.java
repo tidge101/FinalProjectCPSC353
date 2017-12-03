@@ -38,12 +38,14 @@ public class TicTacToeFrame extends JFrame
     private DataOutputStream out;
     private BufferedReader in;
     private String opponentName;
+    private Thread theThread;
+    private ClientListener listener;
 
     // Create cell grid
     private Cell[][] cells = new Cell[3][3];
 
     // Create a status label
-    JLabel jlblStatus = new JLabel("X's turn to play");
+    JLabel jlblStatus;
 
     /**
      * No-argument Constructor
@@ -62,6 +64,7 @@ public class TicTacToeFrame extends JFrame
         add(panel, BorderLayout.CENTER);
         add(jlblStatus, BorderLayout.SOUTH);
         this.myTurn = true;
+        jlblStatus = new JLabel("Your turn to mess around!");
     }
 
     public TicTacToeFrame(boolean myTurn, Socket connectionSock, String name) {
@@ -71,25 +74,37 @@ public class TicTacToeFrame extends JFrame
           for (int j = 0; j < 3; j++)
               panel.add(cells[i][j] = new Cell(i, j));
 
+      if (myTurn) {
+        jlblStatus = new JLabel("X's turn to play!");
+      } else {
+        jlblStatus = new JLabel("O's turn to play!");
+      }
+
       panel.setBorder(new LineBorder(Color.red, 1));
       jlblStatus.setBorder(new LineBorder(Color.yellow, 1));
 
       add(panel, BorderLayout.CENTER);
+
       add(jlblStatus, BorderLayout.SOUTH);
       this.myTurn = myTurn;
       this.connectionSock = connectionSock;
       this.name = name;
 
+      if (myTurn) {
+        listener = new ClientListener(connectionSock, cells, 'O');
+      } else {
+        listener = new ClientListener(connectionSock, cells, 'X');
+      }
+			theThread = new Thread(listener);
+			theThread.start();
+
       try {
         this.out = new DataOutputStream(connectionSock.getOutputStream());
         this.in =  new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
-
         if (myTurn) {
           this.whoseTurn = 'X';
-
         } else {
           this.whoseTurn = 'O';
-
         }
       } catch (IOException ioe) {
         System.out.println("something went really wrong");
@@ -228,8 +243,10 @@ public class TicTacToeFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                if (gameOver || !myTurn)
+                if (gameOver || !myTurn) {
+                    System.out.println("click ignored");
                     return;
+                }
 
                 try {
                   // if the cell is empty and the game is not over
@@ -239,7 +256,7 @@ public class TicTacToeFrame extends JFrame
                   // Check game status
                   if (isWon(whoseTurn))
                   {
-                      jlblStatus.setText(name + " won! Game over!");
+                      jlblStatus.setText(whoseTurn + " won! Game over!");
                       whoseTurn = ' ';
                       gameOver = true;
                       out.writeBytes("Win");
@@ -254,29 +271,84 @@ public class TicTacToeFrame extends JFrame
                   {
                       out.writeBytes("Row: " + row + "\n");
                       out.writeBytes("Col: " + col + "\n");
-                      jlblStatus.setText(opponentName + "'s turn.");
+                      jlblStatus.setText(whoseTurn + "'s turn.");
                   }
 
-                  String fromOpponent = in.readLine();
-                  if (fromOpponent.indexOf("Win") == -1) {
-                    int row = Integer.parseInt(fromOpponent.substring(5));
-                  } else {
-                    jlblStatus.setText(opponentName + " won! Game over!");
-                    whoseTurn = ' ';
-                    gameOver = true;
-                  }
-                  fromOpponent = in.readLine();
-                  int col = Integer.parseInt(fromOpponent.substring(5));
+                  myTurn = false;
+
+
                 } catch (IOException ioe) {
                   System.out.println("something went really wrong");
                 }
 
-                if (whoseTurn == 'X') {
-                  cells[row][col].setToken('O');
-                } else {
-                  cells[row][col].setToken('X');
-                }
+
             }
         } // end class MyMouseListener
     } // end class Cell
+
+    public class ClientListener implements Runnable
+    {
+    	private Socket connectionSock = null;
+    	private BufferedReader serverInput;
+    	private String fromOpponent;
+      private Cell[][] cells;
+      private char mySign;
+
+    	ClientListener(Socket sock, Cell[][] cells, char mySign)
+    	{
+    		this.connectionSock = sock;
+        this.cells = cells;
+        this.mySign = mySign;
+    	}
+    /**
+     * run method in this class receives messages from the server
+     * after the connection is made, and returns this data
+     *
+     */
+    	public void run()
+    	{
+           		 // Wait for data from the server.  If received, output it.
+    		try
+    		{
+    			serverInput = new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
+    			while (true)
+    			{
+    				// Get data sent from the server
+    				fromOpponent = serverInput.readLine();
+    				if (serverInput != null)
+    				{
+              int row = Integer.parseInt(fromOpponent.substring(5));
+              fromOpponent = serverInput.readLine();
+              int col = Integer.parseInt(fromOpponent.substring(5));
+              cells[row][col].setToken(mySign);
+
+              myTurn = true;
+              jlblStatus.setText(mySign + "'s turn to play!");
+
+
+    					if (fromOpponent.indexOf("Win") != -1){
+                myTurn = false;
+                if (mySign == 'X') {
+                  jlblStatus.setText("O won the game! Game over.");
+                } else {
+                  jlblStatus.setText("X won the game! Game over.");
+                }
+    						connectionSock.close();    //prepare to exit the while loop
+    						break;
+    					}
+    				}
+    				else
+    				{
+    					// Connection was lost
+    					connectionSock.close();
+    					break;
+    				}
+    			}
+    		}
+    		catch (Exception e)
+    		{
+    			System.out.println("Error: " + e.toString());
+    		}
+    	}
+    } // ClientListener for GameClient
 } // end class TicTacToeFrame
