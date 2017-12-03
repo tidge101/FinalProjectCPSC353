@@ -63,14 +63,15 @@ public class GameClient
 			inFromServer =  new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
 
 
-			//Prompt for the user's nme and send it to the server
+			//Prompt for the user's name and send it to the server
 			Scanner keyboard = new Scanner(System.in);
 			String name;
 
 			// Read input from server of who they're playing
 			String playerInfo = inFromServer.readLine();
       System.out.println(playerInfo);
-      // If Client is the Host,
+      // If Client is the Host, create a socket and wait for the opponent to connect
+      // Else(Client is not a host), receive Host info and connect to Host
 			if (playerInfo.indexOf("Host") >= 0) {
 				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
 				System.out.println(opponentIp);
@@ -79,7 +80,7 @@ public class GameClient
 				hostSocket = new ServerSocket(hostPort);
 				opponentSock = hostSocket.accept();
 			} else {
-        try {
+          try {
           Thread.sleep(1000);
         } catch (Exception e) {
           System.out.println("problem!");
@@ -91,11 +92,13 @@ public class GameClient
 				opponentSock = new Socket("localhost", hostPort);
 			}
 
+      // Game loop
       while(true){
+        // Receive Player name through user input
         System.out.println("Please enter a valid name!");
         name = keyboard.nextLine();
         if(name.toString() != null){
-    //			serverOutput.writeBytes(name + "\n");
+      //serverOutput.writeBytes(name + "\n");
           break;
         }
 
@@ -105,9 +108,14 @@ public class GameClient
 			TicTacToe currentGame;
 
       try {
+        // Setup communication with opponent Client
         DataOutputStream out = new DataOutputStream(opponentSock.getOutputStream());
         BufferedReader in =  new BufferedReader(new InputStreamReader(opponentSock.getInputStream()));
 
+        // If Client is Host, create new TicTacToe game where it is this Client's
+        // turn. If Client is not the Host, create new TicTacToe game where it is
+        // not this Client's turn. For both cases, output info about the status
+        // and opponent Client.
   			if (hostSocket != null) {
   				currentGame = new TicTacToe(name, true, opponentSock);
 
@@ -124,6 +132,7 @@ public class GameClient
           System.out.println("survived with " + opponentName);
           out.writeBytes("Name: " + name + "\n");
   			}
+        // Initialize the game
         currentGame.initialize();
       } catch (IOException ioe) {
       System.out.println("something went really really wrong");
@@ -134,4 +143,4 @@ public class GameClient
 			System.out.println(e.getMessage());
 		}
 	}
-} // GameClient
+} // End GameClient
