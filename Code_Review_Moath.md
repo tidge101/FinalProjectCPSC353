@@ -2,7 +2,7 @@ Project name:Tic-Tac-Toe
 Programmers:Maika Fujii, Tommy Madden, Dillon Tidgewell
 Code Reviewer: Moath Alomar
 
-On a scale of 1 to 5, I give this code a rating of 6  based on the following criteria:
+On a scale of 1 to 5, I give this code a rating of 4 based on the following criteria:
 
 1  I was not able to compile the program due to insufficient information in the README.md file.
 
@@ -11,7 +11,7 @@ On a scale of 1 to 5, I give this code a rating of 6  based on the following cri
 3  The programs compile successfully but at least one generates runtime errors
 
 4  The programs compile and run but the project does not perform correctly and does not produce correct results.
-Specifically:
+Specifically:I am not sure if it was from the codes or if I couldn't run it correctly
 
 5  The programs compile and produce technically correct results but does not perform according to the documentation or does not comply with Chapman Coding Standards.
 Specifically:
