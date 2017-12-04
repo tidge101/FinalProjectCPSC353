@@ -19,3 +19,4 @@ Specifically:
 6  The program produces correct output and is well written and well documented, following the Chapman Coding Standards.
 
 Suggestions for improving the code (for extra credit!):
+Had a hard time running the program try making it easy to run 
