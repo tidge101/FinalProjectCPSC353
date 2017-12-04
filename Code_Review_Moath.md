@@ -11,7 +11,7 @@ On a scale of 1 to 5, I give this code a rating of 4 based on the following crit
 3  The programs compile successfully but at least one generates runtime errors
 
 4  The programs compile and run but the project does not perform correctly and does not produce correct results.
-Specifically:I am not sure if it was from the codes or if I couldn't run it correctly
+Specifically:I am not sure if it was from the codes or if I couldn't run it correctly.
 
 5  The programs compile and produce technically correct results but does not perform according to the documentation or does not comply with Chapman Coding Standards.
 Specifically:
