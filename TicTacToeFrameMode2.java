@@ -154,7 +154,7 @@ public class TicTacToeFrameMode2 extends JFrame
         if ((cells[0][0].getToken() == token)
                 && (cells[1][1].getToken() == token)
                 && (cells[2][2].getToken() == token)
-                && (cells[2][2].getToken() == token))
+                && (cells[3][3].getToken() == token))
         {
             return true;
         }
