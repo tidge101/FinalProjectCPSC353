@@ -40,9 +40,10 @@ public class TicTacToeFrame extends JFrame
     private String opponentName;
     private Thread theThread;
     private ClientListener listener;
+    private int mode;
 
     // Create cell grid
-    private Cell[][] cells = new Cell[3][3];
+    private Cell[][] cells;
 
     // Create a status label
     JLabel jlblStatus;
@@ -53,6 +54,7 @@ public class TicTacToeFrame extends JFrame
     public TicTacToeFrame()
     {
         // Panel to hold cells
+        cells = new Cell[3][3];
         JPanel panel = new JPanel(new GridLayout(3, 3, 0, 0));
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
@@ -67,11 +69,13 @@ public class TicTacToeFrame extends JFrame
         jlblStatus = new JLabel("Your turn to mess around!");
     }
 
-    public TicTacToeFrame(boolean myTurn, Socket connectionSock, String name) {
+    public TicTacToeFrame(boolean myTurn, Socket connectionSock, String name, int mode) {
       // Panel to hold cells
-      JPanel panel = new JPanel(new GridLayout(3, 3, 0, 0));
-      for (int i = 0; i < 3; i++)
-          for (int j = 0; j < 3; j++)
+      cells = new Cell[mode + 2][mode + 2];
+
+      JPanel panel = new JPanel(new GridLayout(mode + 2, mode + 2, 0, 0));
+      for (int i = 0; i < mode + 2; i++)
+          for (int j = 0; j < mode + 2; j++)
               panel.add(cells[i][j] = new Cell(i, j));
 
       if (myTurn) {
@@ -98,6 +102,8 @@ public class TicTacToeFrame extends JFrame
 			theThread = new Thread(listener);
 			theThread.start();
 
+      this.mode = mode;
+
       try {
         this.out = new DataOutputStream(connectionSock.getOutputStream());
         this.in =  new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
@@ -117,8 +123,8 @@ public class TicTacToeFrame extends JFrame
      */
     public boolean isFull()
     {
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
+        for (int i = 0; i < mode + 2; i++)
+            for (int j = 0; j < mode + 2; j++)
                 if (cells[i][j].getToken() == ' ')
                     return false;
         return true;
@@ -132,7 +138,7 @@ public class TicTacToeFrame extends JFrame
     public boolean isWon(char token)
     {
         // check rows
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < mode + 2; i++)
             if ((cells[i][0].getToken() == token)
                     && (cells[i][1].getToken() == token)
                     && (cells[i][2].getToken() == token))
@@ -141,7 +147,7 @@ public class TicTacToeFrame extends JFrame
             }
 
         // check columns
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < mode + 2; j++)
             if ((cells[0][j].getToken() == token)
                     && (cells[1][j].getToken() == token)
                     && (cells[2][j].getToken() == token))

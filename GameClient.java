@@ -104,12 +104,14 @@ public class GameClient
         }
       }
 
-      if(hostSocket != null)
+      if(hostSocket != null) {
         while(true){
           System.out.println("Please enter 1 for a 3x3 board or 2 for a 4x4 board");
           mode = Integer.parseInt(keyboard.nextLine());
           if(mode == 1 || mode == 2){break;}
         }
+      }
+
 
 			// Start up TicTacToe client here
 			TicTacToe currentGame;
@@ -124,10 +126,10 @@ public class GameClient
         // not this Client's turn. For both cases, output info about the status
         // and opponent Client.
   			if (hostSocket != null) {
+          System.out.println("Host mode: " + mode);
   				currentGame = new TicTacToe(name, true, opponentSock, mode);
           // Send mode to opponent
-          // out.writeBytes(mode.valueOf());
-          //
+          out.writeBytes("Mode: " + mode + "\n");
           out.writeBytes("Name: " + name + "\n");
           System.out.println("Is connected: " + opponentSock.isConnected());
           System.out.println("abouttowait host");
@@ -135,9 +137,10 @@ public class GameClient
           System.out.println("survived with " + opponentName);
   			} else {
           // Get mode from host
-          // mode = in.readInt();
-          //
-  				currentGame = new TicTacToe(name, false, opponentSock, mode);
+          int mymode = Integer.parseInt(in.readLine().substring(6));
+          mode = mymode;
+          System.out.println("Client mode: " + mymode);
+  				currentGame = new TicTacToe(name, false, opponentSock, mymode);
           System.out.println("Is connected: " + opponentSock.isConnected());
           System.out.println("abouttowait client");
           String opponentName = in.readLine();

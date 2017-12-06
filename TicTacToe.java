@@ -79,7 +79,7 @@ public class TicTacToe
     JPanel panel = new JPanel();
     frame.add(panel);
     JButton button = new JButton("Play");
-    button.addActionListener(new playAction(myTurn, connectionSock, name));
+    button.addActionListener(new playAction(myTurn, connectionSock, name, mode));
     panel.add(button);
 
     JMenuBar menubar = new JMenuBar();
@@ -98,17 +98,19 @@ class playAction implements ActionListener{
   private boolean myTurn;
   private Socket connectionSock;
   private String name;
+  private int mode;
 
   public playAction() { this.myTurn = true; }
 
-  public playAction(boolean myTurn, Socket connectionSock, String name) {
+  public playAction(boolean myTurn, Socket connectionSock, String name, int mode) {
     this.myTurn = myTurn;
     this.connectionSock = connectionSock;
     this.name = name;
+    this.mode = mode;
   }
 
   public void actionPerformed (ActionEvent e){
-        JFrame ticTacToe = new TicTacToeFrame(myTurn, connectionSock, name);
+        JFrame ticTacToe = new TicTacToeFrame(myTurn, connectionSock, name, mode);
         ticTacToe.setTitle("Lets Play");
         ticTacToe.setSize(600, 600);
         ticTacToe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
