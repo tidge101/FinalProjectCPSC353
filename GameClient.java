@@ -66,6 +66,7 @@ public class GameClient
 			//Prompt for the user's name and send it to the server
 			Scanner keyboard = new Scanner(System.in);
 			String name;
+      int mode = 1;
 
 			// Read input from server of who they're playing
 			String playerInfo = inFromServer.readLine();
@@ -101,8 +102,14 @@ public class GameClient
       //serverOutput.writeBytes(name + "\n");
           break;
         }
-
       }
+
+      if(hostSocket != null)
+        while(true){
+          System.out.println("Please enter 1 for a 3x3 board or 2 for a 4x4 board");
+          mode = Integer.parseInt(keyboard.nextLine());
+          if(mode == 1 || mode == 2){break;}
+        }
 
 			// Start up TicTacToe client here
 			TicTacToe currentGame;
@@ -117,23 +124,28 @@ public class GameClient
         // not this Client's turn. For both cases, output info about the status
         // and opponent Client.
   			if (hostSocket != null) {
-  				currentGame = new TicTacToe(name, true, opponentSock);
-
+  				currentGame = new TicTacToe(name, true, opponentSock, mode);
+          // Send mode to opponent
+          // out.writeBytes(mode.valueOf());
+          //
           out.writeBytes("Name: " + name + "\n");
           System.out.println("Is connected: " + opponentSock.isConnected());
           System.out.println("abouttowait host");
           String opponentName = in.readLine().substring(6);
           System.out.println("survived with " + opponentName);
   			} else {
-  				currentGame = new TicTacToe(name, false, opponentSock);
+          // Get mode from host
+          // mode = in.readInt();
+          //
+  				currentGame = new TicTacToe(name, false, opponentSock, mode);
           System.out.println("Is connected: " + opponentSock.isConnected());
           System.out.println("abouttowait client");
           String opponentName = in.readLine();
           System.out.println("survived with " + opponentName);
           out.writeBytes("Name: " + name + "\n");
   			}
-        // Initialize the game
-        currentGame.initialize();
+
+        currentGame.initialize(mode);
       } catch (IOException ioe) {
       System.out.println("something went really really wrong");
       }

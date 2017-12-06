@@ -26,60 +26,71 @@ import java.net.*;
 import java.util.*;
 
 /**
- * This is a simple little TicTacToe game.
- */
+* This is a simple little TicTacToe game.
+*/
 public class TicTacToe
 {
-    private String name;
-    private boolean myTurn;
-    private Socket connectionSock;
+  private String name;
+  private boolean myTurn;
+  private Socket connectionSock;
+  private int mode;
 
-    // Constructors
-    public TicTacToe()
-    {
-      this.name = "";
-      myTurn = true;
-    }
+  // Constructors
+  public TicTacToe()
+  {
+    this.name = "";
+    myTurn = true;
+  }
 
-    public TicTacToe(String name, boolean initTurn, Socket opponentSocket)
-    {
-      this.name = name;
-      this.myTurn = initTurn;
-      this.connectionSock = opponentSocket;
-    }
+  public TicTacToe(String name, boolean initTurn, Socket opponentSocket, int m)
+  {
+    this.name = name;
+    this.myTurn = initTurn;
+    this.connectionSock = opponentSocket;
+    this.mode = m;
+  }
 
-    public void setMyTurn(boolean myTurn) {
-      this.myTurn = myTurn;
-    }
+  public void setMyTurn(boolean myTurn) {
+    this.myTurn = myTurn;
+  }
 
-    public boolean getMyTurn() {
-      return myTurn;
-    }
+  public boolean getMyTurn() {
+    return myTurn;
+  }
 
-    // Initializer - set GUI parameters for main menu
-    public void initialize()
-    {
-    	JFrame frame = new JFrame("Menu");
-		frame.setVisible(true);
-		frame.setTitle("Tic-Tac-Toe TCP Game: " + name);
-		frame.setSize(600,600);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  public void setMode(int mode) {
+    this.mode = mode;
+  }
 
-		JPanel panel = new JPanel();
-		frame.add(panel);
-		JButton button = new JButton("Play");
+  public int getMode() {
+    return mode;
+  }
+
+  // Initializer - set GUI parameters for main menu
+  public void initialize(int mode)
+  {
+    JFrame frame = new JFrame("Menu");
+    frame.setVisible(true);
+    frame.setTitle("Tic-Tac-Toe TCP Game: " + name);
+    if(mode == 1){frame.setSize(600,600);}
+    if(mode == 2){frame.setSize(700,700);}
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    JPanel panel = new JPanel();
+    frame.add(panel);
+    JButton button = new JButton("Play");
     button.addActionListener(new playAction(myTurn, connectionSock, name));
-		panel.add(button);
+    panel.add(button);
 
-		JMenuBar menubar = new JMenuBar();
-		frame.setJMenuBar(menubar);
-		JMenu help = new JMenu("Help");
-		menubar.add(help);
-		JMenuItem about = new JMenuItem("About");
-		help.add(about);
+    JMenuBar menubar = new JMenuBar();
+    frame.setJMenuBar(menubar);
+    JMenu help = new JMenu("Help");
+    menubar.add(help);
+    JMenuItem about = new JMenuItem("About");
+    help.add(about);
 
 
-    }
+  }
 } // end class TicTacToe
 
 // Create game window
@@ -97,7 +108,7 @@ class playAction implements ActionListener{
   }
 
   public void actionPerformed (ActionEvent e){
-    JFrame ticTacToe = new TicTacToeFrame(myTurn, connectionSock, name);
+        JFrame ticTacToe = new TicTacToeFrame(myTurn, connectionSock, name);
         ticTacToe.setTitle("Lets Play");
         ticTacToe.setSize(600, 600);
         ticTacToe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
