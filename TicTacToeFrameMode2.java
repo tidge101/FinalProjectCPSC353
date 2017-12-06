@@ -142,7 +142,7 @@ public class TicTacToeFrameMode2 extends JFrame
             }
 
         // check columns
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < 4; j++)
             if ((cells[0][j].getToken() == token)
                     && (cells[1][j].getToken() == token)
                     && (cells[2][j].getToken() == token)
