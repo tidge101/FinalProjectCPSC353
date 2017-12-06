@@ -110,7 +110,12 @@ class playAction implements ActionListener{
   }
 
   public void actionPerformed (ActionEvent e){
-        JFrame ticTacToe = new TicTacToeFrame(myTurn, connectionSock, name, mode);
+        JFrame ticTacToe;
+        if (mode == 2) {
+          ticTacToe = new TicTacToeFrameMode2(myTurn, connectionSock, name);
+        } else {
+          ticTacToe = new TicTacToeFrame(myTurn, connectionSock, name, mode);
+        }
         ticTacToe.setTitle("Lets Play");
         ticTacToe.setSize(600, 600);
         ticTacToe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
