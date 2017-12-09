@@ -112,8 +112,11 @@ class playAction implements ActionListener{
   public void actionPerformed (ActionEvent e){
         JFrame ticTacToe;
         if (mode == 2) {
-          ticTacToe = new TicTacToeFrameMode2(myTurn, connectionSock, name);
-        } else {
+          ticTacToe = new TicTacToeFrameMode2(myTurn, connectionSock, name, mode);
+        }else if(mode == 3){
+          ticTacToe = new TicTacToeFrame3(myTurn, connectionSock, name, mode)
+        } 
+        else {
           ticTacToe = new TicTacToeFrame(myTurn, connectionSock, name, mode);
         }
         ticTacToe.setTitle("Lets Play");
