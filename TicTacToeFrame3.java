@@ -50,7 +50,7 @@ public class TicTacToeFrameMode3 extends JFrame
     /**
      * No-argument Constructor
      */
-    public TicTacToeFrameMode2()
+    public TicTacToeFrameMode3()
     {
         // Panel to hold cells
         JPanel panel = new JPanel(new GridLayout(15, 15, 0, 0));
@@ -67,7 +67,7 @@ public class TicTacToeFrameMode3 extends JFrame
         jlblStatus = new JLabel("Your turn to mess around!");
     }
 
-    public TicTacToeFrameMode2(boolean myTurn, Socket connectionSock, String name) {
+    public TicTacToeFrameMode3(boolean myTurn, Socket connectionSock, String name) {
       // Panel to hold cells
       JPanel panel = new JPanel(new GridLayout(15, 15, 0, 0));
       for (int i = 0; i < 15; i++)

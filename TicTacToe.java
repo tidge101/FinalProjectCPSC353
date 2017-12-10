@@ -114,8 +114,8 @@ class playAction implements ActionListener{
         if (mode == 2) {
           ticTacToe = new TicTacToeFrameMode2(myTurn, connectionSock, name, mode);
         }else if(mode == 3){
-          ticTacToe = new TicTacToeFrame3(myTurn, connectionSock, name, mode)
-        } 
+          ticTacToe = new TicTacToeFrame3(myTurn, connectionSock, name, mode);
+        }
         else {
           ticTacToe = new TicTacToeFrame(myTurn, connectionSock, name, mode);
         }
