@@ -38,11 +38,14 @@
  import java.io.*;
  import java.net.*;
  import java.util.*;
+ import javax.swing.*;
+ import java.awt.*;
+ import java.awt.event.*;
 
 public class GameClient
 {
 
-	private static final String hostname = "localhost";
+	public static String hostname = "localhost";
 	private static final int port = 7654;
 	private static Socket connectionSock;
 	private static DataOutputStream serverOutput;
@@ -54,44 +57,81 @@ public class GameClient
 	//init private variables
 	public static void main(String[] args)
 	{
-		try
-		{
+      JFrame frame = new JFrame("Menu");
+      frame.setSize(300, 300);
+      frame.setTitle("GameClient");
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-			connectionSock = new Socket(hostname, port);
+      JPanel panel = new JPanel();
+      frame.add(panel);
 
-			serverOutput = new DataOutputStream(connectionSock.getOutputStream());
-			inFromServer =  new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
+      JLabel label = new JLabel("IP Address to Connect To: ");
+      panel.add(label);
+
+      JTextField ipField = new JTextField(25);
+
+      ipField.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            JTextField ipField = (JTextField)(e.getSource());
+            String selected = (String)ipField.getText();
+            GameClient.hostname = selected;
+          } catch (Exception ioe) {
+            System.out.println(ioe.getMessage());
+          }
+        }
+      });
+      panel.add(ipField);
+
+      JButton button = new JButton("Connect to Server");
+      button.addActionListener(new ActionListener() {
+
+        public void actionPerformed(ActionEvent e) {
+          // Wait for n players to connect (where n = numPlayers)
+          GameClient.connect();
+        }
+      });
+      panel.add(button);
+      frame.setVisible(true);
+	}
+
+  public static void connect() {
+    try {
+      connectionSock = new Socket(GameClient.hostname, port);
+
+      serverOutput = new DataOutputStream(connectionSock.getOutputStream());
+      inFromServer =  new BufferedReader(new InputStreamReader(connectionSock.getInputStream()));
 
 
-			//Prompt for the user's name and send it to the server
-			Scanner keyboard = new Scanner(System.in);
-			String name;
+      //Prompt for the user's name and send it to the server
+      Scanner keyboard = new Scanner(System.in);
+      String name;
       int mode = 1;
 
-			// Read input from server of who they're playing
-			String playerInfo = inFromServer.readLine();
+      // Read input from server of who they're playing
+      String playerInfo = inFromServer.readLine();
       System.out.println(playerInfo);
       // If Client is the Host, create a socket and wait for the opponent to connect
       // Else(Client is not a host), receive Host info and connect to Host
-			if (playerInfo.indexOf("Host") >= 0) {
-				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
-				System.out.println(opponentIp);
-				int hostPort = Integer.parseInt(inFromServer.readLine().substring(6));
+      if (playerInfo.indexOf("Host") >= 0) {
+        String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
+        System.out.println(opponentIp);
+        int hostPort = Integer.parseInt(inFromServer.readLine().substring(6));
         System.out.println(hostPort);
-				hostSocket = new ServerSocket(hostPort);
-				opponentSock = hostSocket.accept();
-			} else {
+        hostSocket = new ServerSocket(hostPort);
+        opponentSock = hostSocket.accept();
+      } else {
           try {
           Thread.sleep(1000);
         } catch (Exception e) {
           System.out.println("problem!");
         }
-				String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
-				System.out.println(opponentIp);
-				int hostPort = Integer.parseInt(inFromServer.readLine().substring(6));
+        String opponentIp = playerInfo.substring(playerInfo.indexOf("/") + 1, playerInfo.indexOf(","));
+        System.out.println(opponentIp);
+        int hostPort = Integer.parseInt(inFromServer.readLine().substring(6));
         System.out.println(hostPort);
-				opponentSock = new Socket("localhost", hostPort);
-			}
+        opponentSock = new Socket("localhost", hostPort);
+      }
 
       // Game loop
       while(true){
@@ -113,8 +153,8 @@ public class GameClient
       }
 
 
-			// Start up TicTacToe client here
-			TicTacToe currentGame;
+      // Start up TicTacToe client here
+      TicTacToe currentGame;
 
       try {
         // Setup communication with opponent Client
@@ -125,9 +165,9 @@ public class GameClient
         // turn. If Client is not the Host, create new TicTacToe game where it is
         // not this Client's turn. For both cases, output info about the status
         // and opponent Client.
-  			if (hostSocket != null) {
+        if (hostSocket != null) {
           System.out.println("Host mode: " + mode);
-  				currentGame = new TicTacToe(name, true, opponentSock, mode);
+          currentGame = new TicTacToe(name, true, opponentSock, mode);
           // Send mode to opponent
           out.writeBytes("Mode: " + mode + "\n");
           out.writeBytes("Name: " + name + "\n");
@@ -135,27 +175,25 @@ public class GameClient
           System.out.println("abouttowait host");
           String opponentName = in.readLine().substring(6);
           System.out.println("survived with " + opponentName);
-  			} else {
+        } else {
           // Get mode from host
           int mymode = Integer.parseInt(in.readLine().substring(6));
           mode = mymode;
           System.out.println("Client mode: " + mymode);
-  				currentGame = new TicTacToe(name, false, opponentSock, mymode);
+          currentGame = new TicTacToe(name, false, opponentSock, mymode);
           System.out.println("Is connected: " + opponentSock.isConnected());
           System.out.println("abouttowait client");
           String opponentName = in.readLine();
           System.out.println("survived with " + opponentName);
           out.writeBytes("Name: " + name + "\n");
-  			}
+        }
 
         currentGame.initialize(mode);
       } catch (IOException ioe) {
       System.out.println("something went really really wrong");
       }
-		}
-		catch (IOException e)
-		{
-			System.out.println(e.getMessage());
-		}
-	}
+    } catch (IOException ioe) {
+      System.out.println(ioe.getMessage());
+    }
+  }
 } // End GameClient

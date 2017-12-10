@@ -19,8 +19,13 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class GameServer {
+  public static int numPlayers = 0;
+
   private ArrayList<Socket> socketList;
 	private ArrayList<Player> playerList;
 	private ServerSocket serverSock = null;
@@ -127,19 +132,46 @@ public class GameServer {
     // Initialize GameServer
     GameServer server = new GameServer();
 
-    // Get number of players from user input
-    System.out.println("Please enter how many players are in your tournament!");
-    int numPlayers = 0;
-    try {
-      while (numPlayers <= 0) {
-        String numPlayersStr = new BufferedReader(new InputStreamReader(System.in)).readLine();
-        numPlayers = Integer.parseInt(numPlayersStr);
+    JFrame frame = new JFrame("Menu");
+    frame.setSize(300, 300);
+    frame.setTitle("GameServer");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    JPanel panel = new JPanel();
+    frame.add(panel);
+
+    JLabel label = new JLabel("Number of Players: ");
+    panel.add(label);
+
+    String[] numPlayersOptions = {"0", "2", "4", "6", "8", "10", "12", "14", "16"};
+    JComboBox numPlayersBox = new JComboBox(numPlayersOptions);
+    numPlayersBox.setSelectedIndex(8);
+    numPlayersBox.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          JComboBox cb = (JComboBox)(e.getSource());
+          String selected = (String)cb.getSelectedItem();
+          GameServer.numPlayers = Integer.parseInt(selected);
+        } catch (Exception ioe) {
+          System.out.println(ioe.getMessage());
+        }
       }
-    } catch (IOException ioe) {
-      System.out.println("IOE Exception while reading numPlayers: " + ioe.getMessage());
-    }
-    // Wait for n players to connect (where n = numPlayers)
-    server.getConnections(numPlayers);
+    });
+    panel.add(numPlayersBox);
+
+    JButton button = new JButton("Launch Server");
+    button.addActionListener(new ActionListener() {
+
+      public void actionPerformed(ActionEvent e) {
+        // Wait for n players to connect (where n = numPlayers)
+        if (GameServer.numPlayers > 0) {
+          server.getConnections(numPlayers);
+        }
+      }
+    });
+    panel.add(button);
+    frame.setVisible(true);
+
   }
 
 }
