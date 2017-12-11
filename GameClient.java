@@ -102,7 +102,7 @@ public class GameClient
         }
       });
       //enter name
-      JLabel label = new JLabel("Enter Name^ ");
+      JLabel label = new JLabel("Enter Name: ");
       JTextField nameField = new JTextField(25);
       nameField.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
