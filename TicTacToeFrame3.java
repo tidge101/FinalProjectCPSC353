@@ -72,10 +72,12 @@ public class TicTacToeFrame3 extends JFrame
 
     public TicTacToeFrame3(boolean myTurn, Socket connectionSock, String name) {
       // Panel to hold cells
+      cells = new Cell[10][10];
+
       JPanel panel = new JPanel(new GridLayout(10, 10, 0, 0));
       for (int i = 0; i < 10; i++)
-          for (int j = 0; j < 10; j++){
-              panel.add(cells[i][j] = new Cell(i, j));}
+          for (int j = 0; j < 10; j++)
+              panel.add(cells[i][j] = new Cell(i, j));
 
       if (myTurn) {
         jlblStatus = new JLabel("X's turn to play!");

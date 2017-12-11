@@ -24,7 +24,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class GameServer {
-  public static int numPlayers = 0;
+  public static int numPlayers = 2;
+  public static int mode = 1;
 
   private ArrayList<Socket> socketList;
 	private ArrayList<Player> playerList;
@@ -37,7 +38,7 @@ public class GameServer {
     playerList = new ArrayList<Player>();
   }
 
-  private void getConnections(int numberOfPlayers)
+  private void getConnections(int numberOfPlayers, int mode)
   {
     // Wait for a connection from the client
     try
@@ -110,6 +111,8 @@ public class GameServer {
           jOut.writeBytes("Client: " + notMatchedUp.get(i).getConnectionSock() + "\n");
           iOut.writeBytes("Port: " + portToUse + "\n");
           jOut.writeBytes("Port: " + portToUse + "\n");
+          iOut.writeBytes("Mode: " + mode + "\n");
+          jOut.writeBytes("Mode: " + mode + "\n");
           // Remove i and j from notMatchedUp now that they are matched
           notMatchedUp.remove(i);
           if (j > i) {
@@ -145,7 +148,7 @@ public class GameServer {
 
     String[] numPlayersOptions = {"0", "2", "4", "6", "8", "10", "12", "14", "16"};
     JComboBox numPlayersBox = new JComboBox(numPlayersOptions);
-    numPlayersBox.setSelectedIndex(8);
+    numPlayersBox.setSelectedIndex(1);
     numPlayersBox.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         try {
@@ -159,13 +162,35 @@ public class GameServer {
     });
     panel.add(numPlayersBox);
 
+    JLabel instruction = new JLabel("Enter Game Mode: ");
+    panel.add(instruction);
+
+    String[] gameModeOptions = {"1", "2", "3"};
+    JComboBox gameModeBox = new JComboBox(gameModeOptions);
+    gameModeBox.setSelectedIndex(1);
+    gameModeBox.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          JComboBox cb = (JComboBox)(e.getSource());
+          String selected = (String)cb.getSelectedItem();
+          GameServer.mode = Integer.parseInt(selected);
+        } catch (Exception ioe) {
+          System.out.println(ioe.getMessage());
+        }
+      }
+    });
+    panel.add(gameModeBox);
+
+    JLabel moreInstruction = new JLabel("Enter '1' for 3x3, '2' for 4x4, or '3' for 10x10");
+    panel.add(moreInstruction);
+
     JButton button = new JButton("Launch Server");
     button.addActionListener(new ActionListener() {
 
       public void actionPerformed(ActionEvent e) {
         // Wait for n players to connect (where n = numPlayers)
         if (GameServer.numPlayers > 0) {
-          server.getConnections(numPlayers);
+          server.getConnections(numPlayers, mode);
         }
       }
     });
