@@ -3,24 +3,22 @@ Assignment: Tic Tac Toe TCP Game - Final Project
 
 How to Run:
 
-1. Compile the following files in the terminal:
+1. Compile the Java files in the terminal:
 
-javac TicTacToe.java
-javac GameServer.java
-javac GameClient.java
+javac *.java
 
 2. In one terminal, run the following command to run the universal server:
-	
-java GameServer 
+
+java GameServer
 
 3. Select the number of players (in this case select '2') and the game mode and click 'Launch Server'
-	
+
 4. Launch two more Terminal windows and run the following command in each:
-	
+
 java GameClient
 
 5. For each client GUI, enter the ip address of the computer of which the server was run on (in this case 'localhost') and enter the name of each client and click 'Connect to Server'.
-	
+
 6. When the GUI appears for the game, press "Play" for each client.
 
 7. Play!
