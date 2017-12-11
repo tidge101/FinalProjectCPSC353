@@ -74,6 +74,7 @@ public class TicTacToe
     frame.setTitle("Tic-Tac-Toe TCP Game: " + name);
     if(mode == 1){frame.setSize(600,600);}
     if(mode == 2){frame.setSize(700,700);}
+    if(mode == 3){frame.setSize(700,700);}
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     JPanel panel = new JPanel();
@@ -82,12 +83,14 @@ public class TicTacToe
     button.addActionListener(new playAction(myTurn, connectionSock, name, mode));
     panel.add(button);
 
+    /*
     JMenuBar menubar = new JMenuBar();
     frame.setJMenuBar(menubar);
     JMenu help = new JMenu("Help");
     menubar.add(help);
     JMenuItem about = new JMenuItem("About");
     help.add(about);
+    */
 
 
   }
@@ -112,9 +115,9 @@ class playAction implements ActionListener{
   public void actionPerformed (ActionEvent e){
         JFrame ticTacToe;
         if (mode == 2) {
-          ticTacToe = new TicTacToeFrameMode2(myTurn, connectionSock, name, mode);
+          ticTacToe = new TicTacToeFrameMode2(myTurn, connectionSock, name);
         }else if(mode == 3){
-          ticTacToe = new TicTacToeFrame3(myTurn, connectionSock, name, mode);
+          ticTacToe = new TicTacToeFrame3(myTurn, connectionSock, name);
         }
         else {
           ticTacToe = new TicTacToeFrame(myTurn, connectionSock, name, mode);

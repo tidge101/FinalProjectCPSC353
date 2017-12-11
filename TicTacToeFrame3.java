@@ -27,7 +27,7 @@ import java.util.*;
 /**
  * JFrame to hold TicTacToe board.
  */
-public class TicTacToeFrameMode3 extends JFrame
+public class TicTacToeFrame3 extends JFrame
 {
     // Indicate whose turn it is
     private char whoseTurn = 'X';
@@ -42,7 +42,7 @@ public class TicTacToeFrameMode3 extends JFrame
     private ClientListener listener;
 
     // Create cell grid
-    private Cell[][] cells = new Cell[4][4];
+    private Cell[][] cells;
 
     // Create a status label
     JLabel jlblStatus;
@@ -50,13 +50,16 @@ public class TicTacToeFrameMode3 extends JFrame
     /**
      * No-argument Constructor
      */
-    public TicTacToeFrameMode3()
+    public TicTacToeFrame3()
     {
         // Panel to hold cells
-        JPanel panel = new JPanel(new GridLayout(15, 15, 0, 0));
-        for (int i = 0; i < 15; i++)
-            for (int j = 0; j < 15; j++)
+        cells = new Cell[10][10];
+        JPanel panel = new JPanel(new GridLayout(10, 10, 0, 0));
+        panel.setPreferredSize(new Dimension(800,800));
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
                 panel.add(cells[i][j] = new Cell(i, j));
+
 
         panel.setBorder(new LineBorder(Color.red, 1));
         jlblStatus.setBorder(new LineBorder(Color.yellow, 1));
@@ -67,12 +70,12 @@ public class TicTacToeFrameMode3 extends JFrame
         jlblStatus = new JLabel("Your turn to mess around!");
     }
 
-    public TicTacToeFrameMode3(boolean myTurn, Socket connectionSock, String name) {
+    public TicTacToeFrame3(boolean myTurn, Socket connectionSock, String name) {
       // Panel to hold cells
-      JPanel panel = new JPanel(new GridLayout(15, 15, 0, 0));
-      for (int i = 0; i < 15; i++)
-          for (int j = 0; j < 15; j++)
-              panel.add(cells[i][j] = new Cell(i, j));
+      JPanel panel = new JPanel(new GridLayout(10, 10, 0, 0));
+      for (int i = 0; i < 10; i++)
+          for (int j = 0; j < 10; j++){
+              panel.add(cells[i][j] = new Cell(i, j));}
 
       if (myTurn) {
         jlblStatus = new JLabel("X's turn to play!");
@@ -117,8 +120,8 @@ public class TicTacToeFrameMode3 extends JFrame
      */
     public boolean isFull()
     {
-        for (int i = 0; i < 15; i++)
-            for (int j = 0; j < 15; j++)
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j < 10; j++)
                 if (cells[i][j].getToken() == ' ')
                     return false;
         return true;
@@ -132,21 +135,33 @@ public class TicTacToeFrameMode3 extends JFrame
     public boolean isWon(char token)
     {
         // check rows
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 10; i++)
             if ((cells[i][0].getToken() == token)
                     && (cells[i][1].getToken() == token)
                     && (cells[i][2].getToken() == token)
-                    && (cells[i][3].getToken() == token))
+                    && (cells[i][3].getToken() == token)
+                    && (cells[i][4].getToken() == token)
+                    && (cells[i][5].getToken() == token)
+                    && (cells[i][6].getToken() == token)
+                    && (cells[i][7].getToken() == token)
+                    && (cells[i][8].getToken() == token)
+                    && (cells[i][9].getToken() == token))
             {
                 return true;
             }
 
         // check columns
-        for (int j = 0; j < 15; j++)
+        for (int j = 0; j < 10; j++)
             if ((cells[0][j].getToken() == token)
                     && (cells[1][j].getToken() == token)
                     && (cells[2][j].getToken() == token)
-                    && (cells[3][j].getToken() == token))
+                    && (cells[3][j].getToken() == token)
+                    && (cells[4][j].getToken() == token)
+                    && (cells[5][j].getToken() == token)
+                    && (cells[6][j].getToken() == token)
+                    && (cells[7][j].getToken() == token)
+                    && (cells[8][j].getToken() == token)
+                    && (cells[9][j].getToken() == token))
             {
                 return true;
             }
@@ -154,15 +169,27 @@ public class TicTacToeFrameMode3 extends JFrame
         if ((cells[0][0].getToken() == token)
                 && (cells[1][1].getToken() == token)
                 && (cells[2][2].getToken() == token)
-                && (cells[3][3].getToken() == token))
+                && (cells[3][3].getToken() == token)
+                && (cells[4][4].getToken() == token)
+                && (cells[5][5].getToken() == token)
+                && (cells[6][6].getToken() == token)
+                && (cells[7][7].getToken() == token)
+                && (cells[8][8].getToken() == token)
+                && (cells[9][9].getToken() == token))
         {
             return true;
         }
 
-        if ((cells[0][3].getToken() == token)
-                && (cells[1][2].getToken() == token)
-                && (cells[2][1].getToken() == token)
-                && (cells[3][0].getToken() == token))
+        if ((cells[0][9].getToken() == token)
+                && (cells[1][8].getToken() == token)
+                && (cells[2][7].getToken() == token)
+                && (cells[3][6].getToken() == token)
+                && (cells[4][5].getToken() == token)
+                && (cells[5][4].getToken() == token)
+                && (cells[6][3].getToken() == token)
+                && (cells[7][2].getToken() == token)
+                && (cells[8][1].getToken() == token)
+                && (cells[9][0].getToken() == token))
         {
             return true;
         }
@@ -177,7 +204,6 @@ public class TicTacToeFrameMode3 extends JFrame
     {
         // token of this cell
         private char token = ' ';
-
         // location of cell
         private int row;
         private int col;

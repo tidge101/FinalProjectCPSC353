@@ -57,15 +57,24 @@ public class GameClient
 	//init private variables
 	public static void main(String[] args)
 	{
+      GameClient.gui.gui();
+	}
+  public static class gui{
+    static String name;
+    static String mode;
+    static void gui(){
+
       JFrame frame = new JFrame("Menu");
-      frame.setSize(300, 300);
+      frame.setSize(500, 500);
       frame.setTitle("GameClient");
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
       JPanel panel = new JPanel();
       frame.add(panel);
 
-      JLabel label = new JLabel("IP Address to Connect To: ");
+      //The folliwing code would be used if we were not running on the local servers
+
+      /*JLabel label = new JLabel("IP Address to Connect To: ");
       panel.add(label);
 
       JTextField ipField = new JTextField(25);
@@ -82,6 +91,7 @@ public class GameClient
         }
       });
       panel.add(ipField);
+      */
 
       JButton button = new JButton("Connect to Server");
       button.addActionListener(new ActionListener() {
@@ -91,11 +101,64 @@ public class GameClient
           GameClient.connect();
         }
       });
+      //enter name
+      JLabel label = new JLabel("Enter Name: ");
+      JTextField nameField = new JTextField(25);
+      nameField.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            JTextField nameField = (JTextField)(e.getSource());
+            name = (String)nameField.getText();
+          } catch (Exception ioe) {
+            System.out.println(ioe.getMessage());
+          }
+        }
+      });
+      //enter game mode
+      /*
+      JLabel label2 = new JLabel("Enter game mode");
+      JTextField gamemode = new JTextField(25);
+      gamemode.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            JTextField gamemode = (JTextField)(e.getSource());
+            //String selected2 = (String)nameField.getText();
+          } catch (Exception ioe) {
+            System.out.println(ioe.getMessage());
+          }
+        }
+      });
+      */
+      //mode = (String)gamemode.getText();
+      name = (String)nameField.getText();
+      JLabel instruction = new JLabel("Choose game mode in terminal");
+      panel.add(label);
+      panel.add(nameField);
+      //panel.add(label2);
+      //panel.add(gamemode);
       panel.add(button);
+      panel.add(instruction);
+      //JLabel instruction = new JLabel("Enter '1' for 3x3\nEnter '2' for 4x4\nEnter '3' for 10x10");
+      //panel.add(instruction);
       frame.setVisible(true);
-	}
-
-  public static void connect() {
+    }
+    public static String getName(){
+      return name;
+    }
+    public static void setName(String name){
+      name = name;
+    }
+    /*
+    public static String getMode(){
+      return mode;
+    }
+    public static void setMode(String mode){
+      mode = mode;
+    }
+    */
+};
+  public static void connect(){
+    GameClient.gui gui = new GameClient.gui();
     try {
       connectionSock = new Socket(GameClient.hostname, port);
 
@@ -136,8 +199,9 @@ public class GameClient
       // Game loop
       while(true){
         // Receive Player name through user input
-        System.out.println("Please enter a valid name!");
-        name = keyboard.nextLine();
+        //System.out.println("Please enter a valid name!");
+        //name = keyboard.nextLine();
+        name = gui.getName();
         if(name.toString() != null){
       //serverOutput.writeBytes(name + "\n");
           break;
@@ -146,9 +210,9 @@ public class GameClient
 
       if(hostSocket != null) {
         while(true){
-          System.out.println("Please enter 1 for a 3x3 board or 2 for a 4x4 board");
+          System.out.println("Please enter 1 for a 3x3 board or 2 for a 4x4 board \nor 3 for a fun mode");
           mode = Integer.parseInt(keyboard.nextLine());
-          if(mode == 1 || mode == 2){break;}
+          if(mode == 1 || mode == 2 || mode == 3){break;}
         }
       }
 
